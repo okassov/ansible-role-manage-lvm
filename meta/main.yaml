@@ -1,0 +1,25 @@
+---
+galaxy_info:
+
+  role_name: ansible-role-manage-lvm
+
+  author: Okassov Marat
+
+  description: Role for manage LVM and partitions
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+
+  galaxy_tags:
+    - system
+
+dependencies: []

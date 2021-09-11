@@ -1,15 +1,5 @@
-# Ansible role for LVM
-
-Ansible role to manage LVMs
-
-- Configure the LVM
-- Mount LVM to directory
-- Resize PV to maximum size (optional)
-
-#### Variables
-
-```yaml
-
+---
+# defaults file for ansible-manage-lvm
 lvm_groups: []
 # - vgname: ubuntu-vg
 #   disks:
@@ -72,59 +62,16 @@ lvm_groups: []
 # default is false to ensure nothing is changed by accident.
 manage_lvm: false
 
-### nvme to scsi device name map binary helper
+###     nvme to scsi device name map binary helper
 ebsnvme_binary_helper_ver: '0.1.3'
 ebsnvme_binary_helper_tmp: '/tmp'
 ebsnvme_binary_helper_path: '/sbin/go-ebsnvme'
 
-### nvme to scsi device name map script helper
+###     nvme to scsi device name map script helper
 ebsnvme_scrip_helper_path: '/usr/local/bin/ebsnvme-id'
 
-### auto pvresize
+###     auto pvresize (waiting until ansible 2.10 or above as collections have new lvg with integrated pvresize)
+###     waiting for new module in collection set to true or run pvresize manually on remote systems
+###     https://docs.ansible.com/ansible/3/collections/community/general/lvg_module.html
+###
 pvresize_to_max: false
-```
-
-#### Usage
-
-Example inventory.yaml for LVM:
-
-```yaml
-all:
-  children:
-    mongodb:
-  vars:
-    lvm_groups:
-      - vgname: test-vg
-        disks:
-          - /dev/sdb
-        create: true
-        lvnames:
-          - lvname: test_1
-            size: 2g
-            create: true
-            filesystem: ext4
-            mount: true
-            mntp: /mnt/test_1
-          - lvname: test_2
-            size: 3g
-            create: true
-            filesystem: ext4
-            mount: true
-            mntp: /mnt/test_2
-    manage_lvm: true
-    pvresize_to_max: true
-
-test:
-  hosts:
-    test-01:
-      ansible_host: 192.168.1.101
-```
-
-Example of playbook.yaml
-
-```yaml
-- name: Test
-  hosts: test
-  roles:
-    - manage-lvm
-```
